@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Dictionary App</title>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #0f172a; /* dark blue/black */
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      color: #3b82f6;
+    }
+
+    .container {
+      background: #111827;
+      padding: 20px;
+      border-radius: 10px;
+      width: 400px;
+      margin: auto;
+      box-shadow: 0 0 10px #000;
+    }
+
+    input, button {
+      width: 90%;
+      padding: 10px;
+      margin: 5px;
+      border-radius: 5px;
+      border: none;
+    }
+
+    input {
+      background: #1f2937;
+      color: white;
+    }
+
+    button {
+      background: #3b82f6;
+      color: white;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #2563eb;
+    }
+
+    img {
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+
+    .card {
+      background: #1f2937;
+      margin: 10px;
+      padding: 10px;
+      border-radius: 10px;
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>📘 Dictionary App</h1>
+
+<div class="container">
+  <input id="word" placeholder="Word">
+  <input id="meaning" placeholder="Meaning">
+  <input type="file" id="image">
+  <button onclick="addWord()">Add Word</button>
+</div>
+
+<h2>Word List</h2>
+<div id="list"></div>
+
+<script>
+async function addWord() {
+  const formData = new FormData();
+  formData.append("word", document.getElementById("word").value);
+  formData.append("meaning", document.getElementById("meaning").value);
+  formData.append("image", document.getElementById("image").files[0]);
+  formData.append("user_id", 1);
+
+  await fetch("http://localhost:5000/api/words", {
+    method: "POST",
+    body: formData
+  });
+
+  loadWords();
+}
+
+async function loadWords() {
+  const res = await fetch("http://localhost:5000/api/words");
+  const data = await res.json();
+
+  document.getElementById("list").innerHTML =
+    data.map(w => `
+      <div class="card">
+        <b>${w.word}</b><br>
+        ${w.meaning}<br>
+        <img src="http://localhost:5000/uploads/${w.image}" width="100">
+        <br>
+        <button onclick="deleteWord(${w.id})">Delete</button>
+      </div>
+    `).join("");
+}
+
+async function deleteWord(id) {
+  await fetch("http://localhost:5000/api/words/" + id, {
+    method: "DELETE"
+  });
+  loadWords();
+}
+
+loadWords();
+</script>
+
+</body>
+</html>
