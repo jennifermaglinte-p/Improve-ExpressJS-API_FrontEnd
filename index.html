@@ -92,7 +92,7 @@ async function addWord() {
 }
 
 async function loadWords() {
-  const res = await fetch("http://localhost:5000/api/words");
+  const res = await fetch("https://github.com/jennifermaglinte-p/Improve-ExpressJS-API_Backend");
   const data = await res.json();
 
   document.getElementById("list").innerHTML =
@@ -100,7 +100,7 @@ async function loadWords() {
       <div class="card">
         <b>${w.word}</b><br>
         ${w.meaning}<br>
-        <img src="http://localhost:5000/uploads/${w.image}" width="100">
+        <img src="https://github.com/jennifermaglinte-p/Improve-ExpressJS-API_Backend{w.image}" width="100">
         <br>
         <button onclick="deleteWord(${w.id})">Delete</button>
       </div>
@@ -108,7 +108,7 @@ async function loadWords() {
 }
 
 async function deleteWord(id) {
-  await fetch("http://localhost:5000/api/words/" + id, {
+  await fetch("https://github.com/jennifermaglinte-p/Improve-ExpressJS-API_Backend" + id, {
     method: "DELETE"
   });
   loadWords();
